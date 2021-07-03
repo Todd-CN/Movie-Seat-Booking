@@ -4,6 +4,8 @@ const count = document.getElementById("count");
 const total = document.getElementById("total");
 const movieSelect = document.getElementById("movie");
 
+populateUI();
+
 let ticketPrice = +movieSelect.value;
 
 // To save data to local storage...
@@ -31,6 +33,23 @@ function updateSelectedCount() {
   total.innerText = selectedSeatsCount * ticketPrice;
 }
 
+// Get data from local storage and populate UI
+function populateUI() {
+  const selectedSeats = JSON.parse(localStorage.getItem("selectedSeats")); // now we should have the array 'selectedSeats' in local storage
+  if ((selectedSeats !== null) & (selectedSeats.length > 0)) {
+    seats.forEach((seat, index) => {
+      if (selectedSeats.indexOf(index) > -1) {
+        seat.classList.add("selected");
+      }
+    });
+  }
+
+  const selectedMovieIndex = localStorage.getItem("selectedMovieIndex");
+  if (selectedMovieIndex !== null) {
+    movieSelect.selectedIndex = selectedMovieIndex;
+  }
+}
+
 // When we click on a seat, we want the class to change to '.selected' and we want the seat to turn blue
 // We will grab the container and add the event listener onto that
 // We want to bring it down to only open seats
@@ -53,3 +72,6 @@ container.addEventListener("click", (e) => {
     updateSelectedCount();
   }
 });
+
+// Initial count and total set
+updateSelectedCount();
